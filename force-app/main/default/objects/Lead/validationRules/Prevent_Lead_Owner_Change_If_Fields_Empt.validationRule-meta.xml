@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Prevent_Lead_Owner_Change_If_Fields_Empt</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+  ISCHANGED(OwnerId),
+  OR(
+    ISBLANK(Country),
+    ISPICKVAL(LeadSource, &quot;&quot;),
+    AND(
+      $Profile.Name &lt;&gt; &quot;Contract Manager&quot;,
+      ISBLANK(NumberOfEmployees)
+    ),
+    AND(
+      $Profile.Name &lt;&gt; &quot;System Administrator&quot;,
+      ISBLANK(Country)
+    )
+  ),
+  NOT(
+    OR(
+      $Profile.Name = &quot;System Administrator&quot;,
+      $Profile.Name = &quot;Contract Manager&quot;
+    )
+  )
+)</errorConditionFormula>
+    <errorDisplayField>OwnerId</errorDisplayField>
+    <errorMessage>You cannot change the Lead Owner unless Country, Lead Source, and Number of Employees are filled in.</errorMessage>
+</ValidationRule>
